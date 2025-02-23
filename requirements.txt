@@ -1,5 +1,11 @@
-langchain-deepseek==0.1.2
-torch==2.4.1
+langchain-deepseek==0.1.2 # used to create ChatQWEN
+langchain_community==0.3.18
+langchain-huggingface==0.1.2
+langchain-chroma==0.2.2 # vectorized documents for query
+sentence-transformers==3.4.1 # free embeddings
+unstructured==0.16.23
+# QWEN libs
+torch==2.4.1 
 triton==3.0.0
 transformers==4.46.3
 safetensors==0.4.5
