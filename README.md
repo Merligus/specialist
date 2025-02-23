@@ -17,6 +17,8 @@ bash run.sh
 ```
 
 ## Example
+
+## Hugging Face
 ---
 title: DocAnalysis Qwen2.5 1.5B Instruct
 emoji: 🏆

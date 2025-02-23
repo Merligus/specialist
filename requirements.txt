@@ -8,6 +8,8 @@ unstructured[md]==0.16.23
 gradio==5.19.0
 # QWEN libs
 torch==2.4.1 
+langchain-deepseek==0.1.2
+torch==2.4.1
 triton==3.0.0
 transformers==4.46.3
 safetensors==0.4.5
