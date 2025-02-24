@@ -7,24 +7,23 @@ import shutil
 
 CHROMA_PATH = "chromadb/"
 
-INPUT_PATH = "./data/books/alice_segmented/"
+INPUT_PATH = "./data/books/dracula_segmented/"
+INPUT_GLOB = "*.txt"
 
 # free models
-# MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"  # english (small and fast)
-# MODEL_NAME = ("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")  # multiple languages
-MODEL_NAME = "sentence-transformers/all-mpnet-base-v2"  # english (best quality)
+MODEL_NAME = "Alibaba-NLP/gte-multilingual-base"
 
 # setup embeddings
 embeddings = HuggingFaceEmbeddings(
     model_name=MODEL_NAME,
-    model_kwargs={"device": "cuda"},
+    model_kwargs={"device": "cuda", "trust_remote_code": True},
     encode_kwargs={"normalize_embeddings": True},
 )
 
 # load documents
-raw_documents = DirectoryLoader(INPUT_PATH, glob="*.txt").load()
+raw_documents = DirectoryLoader(INPUT_PATH, glob=INPUT_GLOB).load()
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000, chunk_overlap=100, length_function=len, add_start_index=True
+    chunk_size=1000, chunk_overlap=500, length_function=len, add_start_index=True
 )
 documents = text_splitter.split_documents(raw_documents)
 print(f"Split {len(raw_documents)} documents into {len(documents)} chunks.")

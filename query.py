@@ -9,14 +9,17 @@ from langchain_chroma import Chroma
 CHROMA_PATH = "chromadb/"
 
 # free model
-MODEL_NAME = "sentence-transformers/all-mpnet-base-v2"
+MODEL_NAME = "Alibaba-NLP/gte-multilingual-base"
 
 
 def load_db():
     # setup embeddings
     embeddings = HuggingFaceEmbeddings(
         model_name=MODEL_NAME,
-        model_kwargs={"device": "cuda"},  # Altere para "cuda" se tiver GPU
+        model_kwargs={
+            "device": "cuda",
+            "trust_remote_code": True,
+        },
         encode_kwargs={"normalize_embeddings": True},
     )
 
@@ -32,17 +35,18 @@ def query_db(db, query_text):
     context_text = "\n\n---\n\n".join(
         [f"{doc.page_content}" for doc, _score in results]
     )
+    sources = "\n".join([doc.metadata["source"] for doc, _score in results])
 
     # return
-    return context_text
+    return context_text, sources
 
 
 if __name__ == "__main__":
     db = load_db()
 
-    question = "Who Alice follow?"
+    question = "Cor do cabelo de Van Helsing"
 
-    response = query_db(db, question)
+    context, sources = query_db(db, question)
 
     # prompt chat
     prompt = ChatPromptTemplate(
@@ -59,7 +63,7 @@ if __name__ == "__main__":
 
 ---
 
-Answer the question based on the above context: {question}""",
+Answer the question based on the above context in question's original language: {question}""",
             ),
         ]
     )
@@ -70,12 +74,16 @@ Answer the question based on the above context: {question}""",
     # pipeline
     chain = prompt | llm
 
+    print(f"Context:\n{context}\n")
+
     # ask
     print(
         chain.invoke(
             {
-                "context": response,
+                "context": context,
                 "question": question,
             }
         ).content
     )
+
+    print(f"\nSources:\n{sources}")
