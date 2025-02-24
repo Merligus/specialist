@@ -74,16 +74,15 @@ Answer the question based on the above context in question's original language: 
     # pipeline
     chain = prompt | llm
 
-    print(f"Context:\n{context}\n")
+    print(f"Context:\n{context}\n*************************")
 
     # ask
-    print(
-        chain.invoke(
-            {
-                "context": context,
-                "question": question,
-            }
-        ).content
-    )
+    answer = chain.invoke(
+        {
+            "context": context,
+            "question": question,
+        }
+    ).content
+    print(f"Answer:\n{answer}\n*************************")
 
-    print(f"\nSources:\n{sources}")
+    print(f"Sources:\n{sources}")
