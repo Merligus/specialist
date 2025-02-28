@@ -6,13 +6,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
-CHROMA_PATH = "chromadb/"
 
-# free model
-MODEL_NAME = "Alibaba-NLP/gte-multilingual-base"
-
-
-def load_db():
+def load_db(CHROMA_PATH="chromadb/", MODEL_NAME="Alibaba-NLP/gte-multilingual-base"):
     # setup embeddings
     embeddings = HuggingFaceEmbeddings(
         model_name=MODEL_NAME,
@@ -41,13 +36,7 @@ def query_db(db, query_text):
     return context_text, sources
 
 
-if __name__ == "__main__":
-    db = load_db()
-
-    question = "Cor do cabelo de Van Helsing"
-
-    context, sources = query_db(db, question)
-
+def load_chain():
     # prompt chat
     prompt = ChatPromptTemplate(
         [
@@ -73,6 +62,38 @@ Answer the question based on the above context in question's original language: 
 
     # pipeline
     chain = prompt | llm
+
+    return chain
+
+
+def query(question, db, chain):
+    context, sources = query_db(db, question)
+
+    print(f"Context:\n{context}\n*************************")
+
+    # ask
+    answer = chain.invoke(
+        {
+            "context": context,
+            "question": question,
+        }
+    ).content
+    print(f"Answer:\n{answer}\n*************************")
+
+    print(f"Sources:\n{sources}")
+
+    return answer, sources
+
+
+if __name__ == "__main__":
+    db = load_db()
+
+    question = "Cor do cabelo de Van Helsing"
+
+    context, sources = query_db(db, question)
+
+    # model creation
+    chain = load_chain()
 
     print(f"Context:\n{context}\n*************************")
 
