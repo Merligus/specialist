@@ -29,4 +29,6 @@ bash install.sh
 bash run.sh
 ```
 
-## Example
+## Demo
+
+You can use this [app on Hugging Face](https://huggingface.co/spaces/merligus/DocAnalysis-Qwen2.5-1.5B-Instruct). Since the environment is running on a free account, the app will be slower but you can test it with small files. 
