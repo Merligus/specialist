@@ -13,7 +13,6 @@ fi
 eval "$($CONDA_PATH shell.bash hook)"
 
 conda activate specialist
-# python Chroma.py
-python LangChain.py
+python app.py
 conda deactivate
 echo "Completed."
