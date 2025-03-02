@@ -1,3 +1,5 @@
+import torch
+
 # chat
 from QWEN import ChatQWEN
 from langchain_core.prompts import ChatPromptTemplate
@@ -8,11 +10,14 @@ from langchain_chroma import Chroma
 
 
 def load_db(CHROMA_PATH="chromadb/", MODEL_NAME="Alibaba-NLP/gte-multilingual-base"):
+    # Check if CUDA is available
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
     # setup embeddings
     embeddings = HuggingFaceEmbeddings(
         model_name=MODEL_NAME,
         model_kwargs={
-            "device": "cuda",
+            "device": device,
             "trust_remote_code": True,
         },
         encode_kwargs={"normalize_embeddings": True},

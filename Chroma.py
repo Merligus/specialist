@@ -4,6 +4,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 import os
 import shutil
+import torch
 
 
 def create_db(
@@ -14,10 +15,13 @@ def create_db(
     MODEL_NAME="Alibaba-NLP/gte-multilingual-base",
     CHROMA_PATH="./chromadb/",
 ):
+    # Check if CUDA is available
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     # setup embeddings
     embeddings = HuggingFaceEmbeddings(
         model_name=MODEL_NAME,
-        model_kwargs={"device": "cuda", "trust_remote_code": True},
+        model_kwargs={"device": device, "trust_remote_code": True},
         encode_kwargs={"normalize_embeddings": True},
     )
 
